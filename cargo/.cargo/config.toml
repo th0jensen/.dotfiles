@@ -1,0 +1,4 @@
+net.git-fetch-with-cli = true
+build.jobs = 6
+profile.dev.debug = 1
+target.aarch64-apple-darwin.linker = "/opt/homebrew/opt/llvm/bin/clang"

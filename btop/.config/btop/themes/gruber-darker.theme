@@ -1,0 +1,82 @@
+# Theme: Gruber Darker
+# Based on the Helix gruber-darker theme in this dotfiles repo
+# By: Thomas Jensen
+
+# Main background, empty to respect terminal transparency/background.
+theme[main_bg]=""
+
+# Main text color
+theme[main_fg]="#e4e4ef"
+
+# Title color for boxes
+theme[title]="#95a99f"
+
+# Highlight color for keyboard shortcuts
+theme[hi_fg]="#ffdd33"
+
+# Background color of selected item in processes box
+theme[selected_bg]="#303030"
+
+# Foreground color of selected item in processes box
+theme[selected_fg]="#e4e4ef"
+
+# Color of inactive/disabled text
+theme[inactive_fg]="#707070"
+
+# Misc colors for processes box including mini cpu graphs, details memory graph and details status text
+theme[proc_misc]="#95a99f"
+
+# Cpu box outline color
+theme[cpu_box]="#303030"
+
+# Memory/disks box outline color
+theme[mem_box]="#303030"
+
+# Net up/down box outline color
+theme[net_box]="#303030"
+
+# Processes box outline color
+theme[proc_box]="#303030"
+
+# Box divider line and small boxes line color
+theme[div_line]="#303030"
+
+# Temperature graph colors
+theme[temp_start]="#73c936"
+theme[temp_mid]="#cc8c3c"
+theme[temp_end]="#f43841"
+
+# CPU graph colors
+theme[cpu_start]="#73c936"
+theme[cpu_mid]="#cc8c3c"
+theme[cpu_end]="#f43841"
+
+# Mem/Disk free meter
+theme[free_start]="#73c936"
+theme[free_mid]="#95a99f"
+theme[free_end]="#e4e4ef"
+
+# Mem/Disk cached meter
+theme[cached_start]="#96a6c8"
+theme[cached_mid]="#95a99f"
+theme[cached_end]="#e4e4ef"
+
+# Mem/Disk available meter
+theme[available_start]="#73c936"
+theme[available_mid]="#95a99f"
+theme[available_end]="#e4e4ef"
+
+# Mem/Disk used meter
+theme[used_start]="#95a99f"
+theme[used_mid]="#cc8c3c"
+theme[used_end]="#f43841"
+
+# Download graph colors
+theme[download_start]="#96a6c8"
+theme[download_mid]="#95a99f"
+theme[download_end]="#e4e4ef"
+
+# Upload graph colors
+theme[upload_start]="#95a99f"
+theme[upload_mid]="#96a6c8"
+theme[upload_end]="#e4e4ef"
