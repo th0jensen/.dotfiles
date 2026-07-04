@@ -7,7 +7,38 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "show_edit_predictions": true,
+  "hard_tabs": false,
+  "base_keymap": "Emacs",
+  "cursor_shape": "bar",
+  "cursor_blink": false,
+  "inline_code_actions": false,
+  "close_on_file_delete": true,
+  "focus_follows_mouse": {
+    "enabled": false,
+  },
+  "debugger": {
+    "button": false,
+  },
+  "collaboration_panel": {
+    "button": false,
+  },
+  "outline_panel": {
+    "button": false,
+  },
+  "toolbar": {
+    "quick_actions": false,
+    "code_actions": false,
+    "breadcrumbs": false,
+  },
+  "inlay_hints": {
+    "enabled": false,
+  },
+  "indent_guides": {},
+  "semantic_tokens": "combined",
+  "restore_on_startup": "last_session",
+  "code_lens": "on",
+  "cli_default_open_behavior": "new_window",
+  "show_edit_predictions": false,
   "edit_predictions": {
     "mode": "subtle",
     "provider": "zed",
@@ -16,10 +47,11 @@
     },
   },
   "centered_layout": {
-    "right_padding": 0.1,
-    "left_padding": 0.1,
+    "right_padding": 0.05,
+    "left_padding": 0.2,
   },
   "diagnostics": {
+    "include_warnings": true,
     "button": true,
     "inline": {
       "enabled": true,
@@ -38,13 +70,13 @@
     "mute_on_join": true,
   },
   "status_bar": {
-    "active_encoding_button": "enabled",
+    "show_active_file": true,
+    "active_language_button": true,
+    "active_encoding_button": "disabled",
     "cursor_position_button": true,
   },
-  "notification_panel": {
-    "button": false,
-  },
   "git_panel": {
+    "button": false,
     "scrollbar": {
       "show": "never",
     },
@@ -55,34 +87,18 @@
     "dock": "left",
   },
   "agent_servers": {
-    "junie": {
-      "type": "registry",
-    },
-    "gemini": {
-      "type": "registry",
-    },
-    "github-copilot-cli": {
-      "type": "registry",
-    },
-    "mistral-vibe": {
+    "pi-acp": {
       "default_config_options": {
-        "mode": "auto-approve",
+        "thought_level": "xhigh",
       },
       "type": "registry",
-    },
-    "claude-acp": {
-      "type": "registry",
-    },
-    "codex-acp": {
-      "type": "registry",
-      "favorite_config_option_values": {
-        "reasoning_effort": ["high"],
-      },
     },
   },
   "buffer_font_family": "JetBrainsMono Nerd Font",
   "terminal": {
-    "show_count_badge": true,
+    "option_as_meta": true,
+    "button": false,
+    "show_count_badge": false,
     "font_family": "JetBrainsMono Nerd Font",
   },
   "ssh_connections": [
@@ -93,6 +109,9 @@
       "projects": [
         {
           "paths": ["/home/thomas/.config/./"],
+        },
+        {
+          "paths": ["/home/thomas/Developer/fff-gpui"],
         },
       ],
     },
@@ -108,21 +127,22 @@
     },
   ],
   "project_panel": {
+    "starts_open": false,
     "show_diagnostics": "all",
-    "button": true,
+    "button": false,
     "hide_hidden": false,
     "hide_root": false,
     "indent_guides": {
       "show": "always",
     },
     "bold_folder_labels": false,
-    "indent_size": 20.0,
-    "folder_icons": false,
-    "entry_spacing": "standard",
+    "folder_icons": true,
+    "entry_spacing": "comfortable",
     "hide_gitignore": false,
     "default_width": 240.0,
     "dock": "right",
     "scrollbar": {
+      "horizontal_scroll": false,
       "show": "never",
     },
   },
@@ -135,21 +155,23 @@
   "scrollbar": {
     "show": "never",
   },
-  "autosave": "on_focus_change",
+  "autosave": "off",
   "active_pane_modifiers": {
     "border_size": 0.0,
   },
   "use_system_window_tabs": true,
   "search": {
+    "center_on_match": true,
     "button": false,
   },
   "title_bar": {
+    "show_onboarding_banner": false,
+    "show_branch_status_icon": true,
     "show_branch_name": true,
-    "show_branch_icon": true,
     "show_project_items": true,
     "show_sign_in": true,
-    "show_user_menu": true,
-    "show_user_picture": true,
+    "show_user_menu": false,
+    "show_user_picture": false,
     "show_menus": true,
   },
   "tabs": {
@@ -161,10 +183,11 @@
   "tab_bar": {
     "show_pinned_tabs_in_separate_row": false,
     "show": true,
-    "show_nav_history_buttons": true,
+    "show_nav_history_buttons": false,
     "show_tab_bar_buttons": false,
   },
   "agent": {
+    "button": true,
     "default_profile": "write",
     "dock": "left",
     "show_turn_stats": true,
@@ -173,13 +196,46 @@
       "default": "allow",
     },
     "default_model": {
-      "provider": "mistral",
-      "model": "codestral-latest",
+      "effort": "medium",
+      "enable_thinking": true,
+      "provider": "openai-subscribed",
+      "model": "gpt-5.5",
     },
     "model_parameters": [],
   },
   "icon_theme": "Colored Zed Icons Theme Dark",
   "ui_font_size": 16,
+  "ui_font_family": "Alef",
   "buffer_font_size": 15,
   "theme": "Gruber Darker",
+  "languages": {
+    "JSON": {
+      "language_servers": ["!biome", "..."],
+    },
+    "JSONC": {
+      "language_servers": ["!biome", "..."],
+    },
+  },
+  "language_models": {
+    "openai_compatible": {
+      "Foundation Models": {
+        "api_url": "http://127.0.0.1:1976/v1",
+        "available_models": [
+          {
+            "name": "system",
+            "display_name": "AFM 3 Core (7b)",
+            "max_tokens": 2048,
+            "capabilities": {
+              "tools": true,
+              "images": false,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+              "interleaved_reasoning": false,
+            },
+          },
+        ],
+      },
+    },
+  },
 }

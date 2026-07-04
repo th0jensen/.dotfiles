@@ -1,0 +1,21 @@
+[options]
+focus_follows_mouse = true
+mouse_follows_focus = true
+
+[padding]
+top = 10
+bottom = 10
+left = 10
+right = 10
+
+[bindings]
+window_focus_west = "alt - h"
+window_swap_west = "alt + shift - h"
+window_focus_east = "alt - l"
+window_swap_east = "alt + shift - l"
+window_resize = "alt - r"
+window_center = "alt - c"
+quit = "ctrl + alt - q"
+
+[swipe.gesture]
+fingers_count = 3

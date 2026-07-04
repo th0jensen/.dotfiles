@@ -1,14 +1,10 @@
 command = /opt/homebrew/bin/nu
 macos-titlebar-style = tabs
 auto-update-channel = tip
-background-opacity = 0
-background-blur = macos-glass-regular
-window-padding-x = 0
+background-opacity = 1
+window-padding-x = 5
 window-padding-y = 5
 unfocused-split-opacity = 1
 split-divider-color = #000000
 theme = Gruber Darker
 font-family = "JetBrainsMono Nerd Font"
-
-## Keybinds
-keybind = global:shift+cmd+opt+ctrl+enter=toggle_quick_terminal

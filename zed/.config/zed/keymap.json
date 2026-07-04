@@ -1,43 +1,423 @@
 // Zed keymap
-//
-// For information on binding keys, see the Zed
-// documentation: https://zed.dev/docs/key-bindings
-//
-// To see the default key bindings run `zed: open default keymap`
-// from the command palette.
+// Sensible Emacs-native layer + kept local custom bindings.
+// Notes:
+// - C-SPC is mark, not completion. Karabiner rescues it from macOS in Zed Nightly.
+// - Multi-cursor uses Emacs-ish C-> / C-< plus C-c m prefix.
 [
+  // --- Emacs cancel / mark workaround ---
+  {
+    "context": "!GitPanel",
+    "bindings": {
+      "ctrl-g": "menu::Cancel",
+    },
+  },
+  {
+    // Avoid falling back to default go-to-line when there is nothing to cancel.
+    "context": "Editor",
+    "bindings": {
+      "ctrl-g": null,
+    },
+  },
+
+  // --- Core Emacs editing ---
+  {
+    "context": "Editor",
+    "bindings": {
+      "ctrl-g": "editor::Cancel",
+
+      "ctrl-space": "editor::SetMark",
+      "ctrl-@": "editor::SetMark",
+      "ctrl-x ctrl-x": "editor::SwapSelectionEnds",
+
+      "ctrl-f": "editor::MoveRight",
+      "ctrl-b": "editor::MoveLeft",
+      "ctrl-n": "editor::MoveDown",
+      "ctrl-p": "editor::MoveUp",
+      "ctrl-a": [
+        "editor::MoveToBeginningOfLine",
+        { "stop_at_soft_wraps": false },
+      ],
+      "ctrl-e": ["editor::MoveToEndOfLine", { "stop_at_soft_wraps": false }],
+      "alt-f": "editor::MoveToNextWordEnd",
+      "escape f": "editor::MoveToNextWordEnd",
+      "alt-shift-f": "editor::SelectToNextWordEnd",
+      "escape shift-f": "editor::SelectToNextWordEnd",
+      "alt-b": "editor::MoveToPreviousWordStart",
+      "escape b": "editor::MoveToPreviousWordStart",
+      "alt-shift-b": "editor::SelectToPreviousWordStart",
+      "escape shift-b": "editor::SelectToPreviousWordStart",
+      "alt-m": [
+        "editor::MoveToBeginningOfLine",
+        { "stop_at_soft_wraps": false, "stop_at_indent": true },
+      ],
+      "escape m": [
+        "editor::MoveToBeginningOfLine",
+        { "stop_at_soft_wraps": false, "stop_at_indent": true },
+      ],
+      "alt-<": "editor::MoveToBeginning",
+      "escape <": "editor::MoveToBeginning",
+      "alt->": "editor::MoveToEnd",
+      "escape >": "editor::MoveToEnd",
+      "ctrl-x [": "editor::MoveToBeginning",
+      "ctrl-x ]": "editor::MoveToEnd",
+      "alt-{": "editor::MoveToStartOfParagraph",
+      "escape {": "editor::MoveToStartOfParagraph",
+      "alt-}": "editor::MoveToEndOfParagraph",
+      "escape }": "editor::MoveToEndOfParagraph",
+      "ctrl-up": "editor::MoveToStartOfParagraph",
+      "ctrl-down": "editor::MoveToEndOfParagraph",
+      "ctrl-v": ["editor::MovePageDown", { "center_cursor": true }],
+      "alt-v": ["editor::MovePageUp", { "center_cursor": true }],
+      "escape v": ["editor::MovePageUp", { "center_cursor": true }],
+      "alt-shift-v": "editor::SelectPageUp",
+      "escape shift-v": "editor::SelectPageUp",
+      "ctrl-l": "editor::ScrollCursorCenterTopBottom",
+
+      "ctrl-d": "editor::Delete",
+      "ctrl-h": "editor::Backspace",
+      "ctrl-k": "editor::KillRingCut",
+      "ctrl-w": "editor::Cut",
+      "alt-w": "editor::Copy",
+      "escape w": "editor::Copy",
+      "ctrl-y": "editor::KillRingYank",
+      "alt-d": [
+        "editor::DeleteToNextWordEnd",
+        { "ignore_newlines": false, "ignore_brackets": false },
+      ],
+      "escape d": [
+        "editor::DeleteToNextWordEnd",
+        { "ignore_newlines": false, "ignore_brackets": false },
+      ],
+      "alt-backspace": [
+        "editor::DeleteToPreviousWordStart",
+        { "ignore_newlines": false, "ignore_brackets": false },
+      ],
+      "alt-delete": [
+        "editor::DeleteToPreviousWordStart",
+        { "ignore_newlines": false, "ignore_brackets": false },
+      ],
+      "ctrl-t": "editor::Transpose",
+      "alt-^": "editor::JoinLines",
+      "escape ^": "editor::JoinLines",
+
+      "ctrl-_": "editor::Undo",
+      "ctrl-/": "editor::Undo",
+      "ctrl-x u": "editor::Undo",
+      "cmd-z": "editor::Undo",
+      "cmd-shift-z": "editor::Redo",
+
+      "ctrl-s": "buffer_search::Deploy",
+      "ctrl-r": "buffer_search::Deploy",
+      "alt-g g": "go_to_line::Toggle",
+      "alt-g alt-g": "go_to_line::Toggle",
+      "escape g g": "go_to_line::Toggle",
+      "alt-.": "editor::GoToDefinition",
+      "escape .": "editor::GoToDefinition",
+      "alt-?": "editor::FindAllReferences",
+      "escape ?": "editor::FindAllReferences",
+      "alt-,": "pane::GoBack",
+      "escape ,": "pane::GoBack",
+
+      "alt-u": "editor::ConvertToUpperCase",
+      "escape u": "editor::ConvertToUpperCase",
+      "alt-l": "editor::ConvertToLowerCase",
+      "escape l": "editor::ConvertToLowerCase",
+      "alt-c": "editor::ConvertToUpperCamelCase",
+      "escape c": "editor::ConvertToUpperCamelCase",
+      "alt-q": "editor::Rewrap",
+      "escape q": "editor::Rewrap",
+      "alt-;": ["editor::ToggleComments", { "advance_downwards": false }],
+      "escape ;": ["editor::ToggleComments", { "advance_downwards": false }],
+      "ctrl-x ctrl-;": "editor::ToggleComments",
+      "ctrl-x h": "editor::SelectAll",
+
+      "home": [
+        "editor::MoveToBeginningOfLine",
+        { "stop_at_soft_wraps": false },
+      ],
+      "end": ["editor::MoveToEndOfLine", { "stop_at_soft_wraps": false }],
+      "shift-home": [
+        "editor::SelectToBeginningOfLine",
+        { "stop_at_soft_wraps": false },
+      ],
+      "shift-end": [
+        "editor::SelectToEndOfLine",
+        { "stop_at_soft_wraps": false },
+      ],
+      "ctrl-shift-f": "editor::SelectRight",
+      "ctrl-shift-b": "editor::SelectLeft",
+      "ctrl-shift-n": "editor::SelectDown",
+      "ctrl-shift-p": "editor::SelectUp",
+    },
+  },
+
+  // --- Selection mode should not hijack normal Emacs motion.
+  // Zed enters selection_mode for mouse/GUI selections too, so C-f/C-b must still move.
+  {
+    "context": "Editor && selection_mode",
+    "bindings": {
+      "ctrl-g": "editor::Cancel",
+      "ctrl-f": "editor::MoveRight",
+      "ctrl-b": "editor::MoveLeft",
+      "ctrl-n": "editor::MoveDown",
+      "ctrl-p": "editor::MoveUp",
+      "ctrl-a": [
+        "editor::MoveToBeginningOfLine",
+        { "stop_at_soft_wraps": false },
+      ],
+      "ctrl-e": ["editor::MoveToEndOfLine", { "stop_at_soft_wraps": false }],
+      "alt-f": "editor::MoveToNextWordEnd",
+      "escape f": "editor::MoveToNextWordEnd",
+      "alt-b": "editor::MoveToPreviousWordStart",
+      "escape b": "editor::MoveToPreviousWordStart",
+      "ctrl-v": ["editor::MovePageDown", { "center_cursor": true }],
+      "alt-v": ["editor::MovePageUp", { "center_cursor": true }],
+      "escape v": ["editor::MovePageUp", { "center_cursor": true }],
+
+      "ctrl-shift-f": "editor::SelectRight",
+      "ctrl-shift-b": "editor::SelectLeft",
+      "ctrl-shift-n": "editor::SelectDown",
+      "ctrl-shift-p": "editor::SelectUp",
+      "alt-shift-f": "editor::SelectToNextWordEnd",
+      "escape shift-f": "editor::SelectToNextWordEnd",
+      "alt-shift-b": "editor::SelectToPreviousWordStart",
+      "escape shift-b": "editor::SelectToPreviousWordStart",
+      "shift-right": "editor::SelectRight",
+      "shift-left": "editor::SelectLeft",
+      "shift-down": "editor::SelectDown",
+      "shift-up": "editor::SelectUp",
+    },
+  },
+
+  // --- Indent, code, multi-cursor, structure. C-c prefix is user space in Emacs. ---
+  {
+    "context": "Editor && !showing_code_actions && !showing_completions",
+    "bindings": {
+      "tab": "editor::AutoIndent",
+    },
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "cmd-[": "editor::Outdent",
+      "cmd-]": "editor::Indent",
+      "ctrl-c <": "editor::Outdent",
+      "ctrl-c >": "editor::Indent",
+      "cmd-shift-i": "editor::Format",
+      "ctrl-c f": "editor::Format",
+      "alt-shift-o": "editor::OrganizeImports",
+      "escape shift-o": "editor::OrganizeImports",
+
+      "ctrl-.": ["editor::SelectNext", { "replace_newest": false }],
+      "ctrl->": ["editor::UndoSelection", { "replace_newest": false }],
+      "ctrl-,": ["editor::SelectPrevious", { "replace_newest": false }],
+      "ctrl-<": ["editor::UndoSelection", { "replace_newest": false }],
+      "ctrl-c ctrl-.": "editor::SelectAllMatches",
+      "ctrl-c /": "editor::ShowWordCompletions",
+      "cmd-ctrl-p": ["editor::AddSelectionAbove", { "skip_soft_wrap": true }],
+      "cmd-ctrl-n": ["editor::AddSelectionBelow", { "skip_soft_wrap": true }],
+
+      "ctrl-c up": "editor::MoveLineUp",
+      "ctrl-c down": "editor::MoveLineDown",
+      "alt-up": "editor::MoveLineUp",
+      "alt-down": "editor::MoveLineDown",
+      "alt-shift-up": "editor::DuplicateLineUp",
+      "escape shift-up": "editor::DuplicateLineUp",
+      "alt-shift-down": "editor::DuplicateLineDown",
+      "escape shift-down": "editor::DuplicateLineDown",
+      "cmd-shift-k": "editor::DeleteLine",
+
+      "cmd-ctrl-left": "editor::SelectSmallerSyntaxNode",
+      "cmd-ctrl-right": "editor::SelectLargerSyntaxNode",
+      "cmd-ctrl-up": "editor::SelectPreviousSyntaxNode",
+      "cmd-ctrl-down": "editor::SelectNextSyntaxNode",
+      "ctrl-shift-left": "editor::UndoSelection",
+      "ctrl-shift-right": "editor::UndoSelection",
+
+      "cmd-/": ["editor::ToggleComments", { "advance_downwards": true }],
+      "cmd-k cmd-/": "editor::ToggleBlockComments",
+      "shift-alt-a": "editor::ToggleBlockComments",
+      "cmd-.": "editor::ToggleCodeActions",
+      "cmd-k cmd-i": "editor::Hover",
+      "f2": "editor::Rename",
+      "f12": "editor::GoToDefinition",
+      "shift-f12": "editor::GoToImplementation",
+      "alt-shift-f12": "editor::FindAllReferences",
+      "f8": [
+        "editor::GoToDiagnostic",
+        { "severity": { "min": "hint", "max": "error" } },
+      ],
+      "shift-f8": [
+        "editor::GoToPreviousDiagnostic",
+        { "severity": { "min": "hint", "max": "error" } },
+      ],
+
+      "cmd-k cmd-l": "editor::ToggleFold",
+      "cmd-k cmd-[": "editor::FoldRecursive",
+      "cmd-k cmd-]": "editor::UnfoldRecursive",
+      "cmd-k cmd-0": "editor::FoldAll",
+      "cmd-k cmd-j": "editor::UnfoldAll",
+    },
+  },
+
+  // --- Completion and popups keep Emacs navigation. ---
+  {
+    "context": "Editor && showing_completions",
+    "bindings": {
+      "ctrl-n": "editor::ContextMenuNext",
+      "ctrl-p": "editor::ContextMenuPrevious",
+      "tab": "editor::ComposeCompletion",
+      "enter": "editor::ConfirmCompletion",
+      "shift-enter": "editor::ConfirmCompletionReplace",
+    },
+  },
+  {
+    "context": "Editor && showing_code_actions",
+    "bindings": {
+      "ctrl-n": "editor::ContextMenuNext",
+      "ctrl-p": "editor::ContextMenuPrevious",
+      "enter": "editor::ConfirmCodeAction",
+    },
+  },
+  {
+    "context": "Editor && showing_signature_help && !showing_completions",
+    "bindings": {
+      "ctrl-p": "editor::SignatureHelpPrevious",
+      "ctrl-n": "editor::SignatureHelpNext",
+    },
+  },
+
+  // --- Emacs workspace/window/file commands ---
   {
     "context": "Workspace",
     "bindings": {
-      // "shift shift": "file_finder::Toggle"
+      "alt-x": "command_palette::Toggle",
+      "ctrl-x b": "tab_switcher::Toggle",
+      "ctrl-x ctrl-b": "tab_switcher::Toggle",
+      "ctrl-x ctrl-c": "zed::Quit",
+      "ctrl-x 5 0": "workspace::CloseWindow",
+      "ctrl-x 5 2": "workspace::NewWindow",
+      "ctrl-x o": "workspace::ActivateNextPane",
+      "ctrl-x k": "pane::CloseActiveItem",
+      "ctrl-x 0": "pane::CloseActiveItem",
+      "ctrl-x 1": "pane::CloseOtherItems",
+      "ctrl-x 2": "pane::SplitDown",
+      "ctrl-x 3": "pane::SplitRight",
+      "ctrl-x ctrl-f": "file_finder::Toggle",
+      "ctrl-x ctrl-s": "workspace::Save",
+      "ctrl-x ctrl-w": "workspace::SaveAs",
+      "ctrl-x s": "workspace::SaveAll",
+
+      "cmd-p": "file_finder::Toggle",
+      "cmd-shift-p": "command_palette::Toggle",
+      "cmd-shift-f": "pane::DeploySearch",
+      "cmd-shift-h": ["pane::DeploySearch", { "replace_enabled": true }],
+      "cmd-alt-s": "workspace::SaveAll",
+      "cmd-shift-t": "pane::ReopenClosedItem",
+      "cmd-k cmd-s": "zed::OpenKeymap",
+    },
+  },
+
+  // --- Search bars: Emacs next/previous/cancel. ---
+  {
+    "context": "BufferSearchBar > Editor",
+    "bindings": {
+      "ctrl-s": "search::SelectNextMatch",
+      "ctrl-r": "search::SelectPreviousMatch",
+      "ctrl-g": "buffer_search::Dismiss",
     },
   },
   {
-    "context": "Editor && vim_mode == insert",
+    "context": "BufferSearchBar && !in_replace > Editor",
     "bindings": {
-      // "j k": "vim::NormalBefore"
+      "ctrl-enter": "editor::Newline",
+      "shift-enter": "search::SelectPreviousMatch",
     },
   },
+  {
+    "context": "BufferSearchBar && in_replace > Editor",
+    "bindings": {
+      "enter": "search::ReplaceNext",
+      "cmd-enter": "search::ReplaceAll",
+    },
+  },
+
+  // --- Let real Emacs/readline inside terminal receive Emacs keys. ---
+  {
+    "context": "Terminal",
+    "bindings": {
+      "ctrl-x ctrl-c": null,
+      "ctrl-x ctrl-f": null,
+      "ctrl-x ctrl-s": null,
+      "ctrl-x ctrl-w": null,
+      "ctrl-x s": null,
+      "ctrl-_": null,
+      "ctrl-space": ["terminal::SendKeystroke", "ctrl-space"],
+      "ctrl-a": ["terminal::SendKeystroke", "ctrl-a"],
+      "ctrl-e": ["terminal::SendKeystroke", "ctrl-e"],
+      "ctrl-b": ["terminal::SendKeystroke", "ctrl-b"],
+      "ctrl-f": ["terminal::SendKeystroke", "ctrl-f"],
+      "ctrl-p": ["terminal::SendKeystroke", "ctrl-p"],
+      "ctrl-n": ["terminal::SendKeystroke", "ctrl-n"],
+      "ctrl-k": ["terminal::SendKeystroke", "ctrl-k"],
+      "ctrl-y": ["terminal::SendKeystroke", "ctrl-y"],
+      "ctrl-r": ["terminal::SendKeystroke", "ctrl-r"],
+      "alt-b": ["terminal::SendText", "\u001bb"],
+      "alt-f": ["terminal::SendText", "\u001bf"],
+      "alt-d": ["terminal::SendText", "\u001bd"],
+      "alt-backspace": ["terminal::SendKeystroke", "ctrl-w"],
+      "cmd-c": "terminal::Copy",
+      "cmd-v": "terminal::Paste",
+    },
+  },
+
+  // --- Kept local custom bindings from previous keymap. ---
   {
     "bindings": {
       "ctrl-alt-cmd-shift-l": "dev::OpenLanguageServerLogs",
+      "ctrl-alt-cmd-shift-r": ["task::Rerun", { "reevaluate_context": false }],
+      "ctrl-alt-cmd-shift-p": "editor::StopLanguageServer",
+      "ctrl-alt-cmd-shift-o": "editor::RestartLanguageServer",
+    },
+  },
+  {
+    "bindings": {
+      "cmd-l": "multi_workspace::ToggleWorkspaceSidebar",
+      "cmd-j": "terminal_panel::Toggle",
+      "cmd-b": "project_panel::Toggle",
+      "cmd-g": ["task::Spawn", { "task_name": "Open Gitu" }],
+    },
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "alt-cmd-j": "multi_workspace::ToggleWorkspaceSidebar",
+      "ctrl-`": "terminal_panel::Toggle",
     },
   },
   {
     "context": "Workspace",
     "bindings": {
-      "ctrl-alt-cmd-shift-r": [
-        "task::Rerun",
-        {
-          "reevaluate_context": false
-        }
-      ]
-    }
+      "cmd-k cmd-f": ["task::Spawn", { "task_name": "fff-gpui: Files" }],
+      "cmd-k cmd-p": ["task::Spawn", { "task_name": "fff-gpui: Grep" }],
+    },
   },
   {
-    "context": "(Workspace && !Terminal)",
+    "context": "Workspace && !Terminal",
+    "unbind": {
+      "cmd-shift-r": "task::Spawn",
+      "ctrl-alt-shift-r": ["task::Spawn", { "reveal_target": "center" }],
+    },
+  },
+  {
+    "context": "Workspace && !Terminal",
     "bindings": {
-      "alt-cmd-r": null
+      "cmd-shift-r": "task::Spawn",
+    },
+  },
+  {
+    "bindings": {
+      "cmd-k f": "text_finder::Toggle"
     }
   }
 ]
