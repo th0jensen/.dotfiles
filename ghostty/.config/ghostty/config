@@ -1,5 +1,5 @@
-command = /opt/homebrew/bin/nu
-macos-titlebar-style = tabs
+command = /bin/zsh
+macos-titlebar-style = hidden
 auto-update-channel = tip
 background-opacity = 1
 window-padding-x = 5

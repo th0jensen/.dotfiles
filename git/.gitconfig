@@ -3,3 +3,6 @@
 	email = thomas.jensen_@outlook.com
 [url "git@github.com:"]
 	insteadOf = https://github.com/
+[safe]
+	directory = /Volumes/Prestige
+	directory = /Volumes/Prestige/dev/th0jensen/portfolio

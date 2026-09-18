@@ -191,10 +191,10 @@
 
   // --- Indent, code, multi-cursor, structure. C-c prefix is user space in Emacs. ---
   {
-    "context": "Editor && !showing_code_actions && !showing_completions",
-    "bindings": {
-      "tab": "editor::AutoIndent",
-    },
+    // "context": "Editor && !showing_code_actions && !showing_completions",
+    // "bindings": {
+    //   "tab": "editor::AutoIndent",
+    // },
   },
   {
     "context": "Editor",
@@ -385,7 +385,6 @@
       "cmd-l": "multi_workspace::ToggleWorkspaceSidebar",
       "cmd-j": "terminal_panel::Toggle",
       "cmd-b": "project_panel::Toggle",
-      "cmd-g": ["task::Spawn", { "task_name": "Open Gitu" }],
     },
   },
   {
@@ -418,6 +417,11 @@
   {
     "bindings": {
       "cmd-k f": "text_finder::Toggle"
+    }
+  },
+  {
+    "bindings": {
+      "cmd-g": "git_panel::Toggle"
     }
   }
 ]

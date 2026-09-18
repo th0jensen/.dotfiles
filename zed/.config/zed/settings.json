@@ -7,6 +7,8 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "diff_view_style": "unified",
+  "accessible_mode": false,
   "hard_tabs": false,
   "base_keymap": "Emacs",
   "cursor_shape": "bar",
@@ -38,7 +40,7 @@
   "restore_on_startup": "last_session",
   "code_lens": "on",
   "cli_default_open_behavior": "new_window",
-  "show_edit_predictions": false,
+  "show_edit_predictions": true,
   "edit_predictions": {
     "mode": "subtle",
     "provider": "zed",
@@ -58,19 +60,19 @@
     },
   },
   "git": {
-    "inline_blame": {},
+    "inline_blame": {
+      "location": "status_bar"
+    },
   },
   "audio": {
     "experimental.input_audio_device": "coreaudio:BuiltInMicrophoneDevice",
     "experimental.output_audio_device": "coreaudio:BuiltInSpeakerDevice",
-    "experimental.auto_microphone_volume": true,
-    "experimental.rodio_audio": true,
   },
   "calls": {
     "mute_on_join": true,
   },
   "status_bar": {
-    "show_active_file": true,
+    "show_active_file": false,
     "active_language_button": true,
     "active_encoding_button": "disabled",
     "cursor_position_button": true,
@@ -82,16 +84,29 @@
     },
     "tree_view": true,
     "collapse_untracked_diff": false,
-    "sort_by_path": false,
     "status_style": "icon",
-    "dock": "left",
+    "dock": "right",
   },
   "agent_servers": {
     "pi-acp": {
       "default_config_options": {
-        "thought_level": "xhigh",
+        "model": "openai-codex/gpt-5.6-sol"
       },
-      "type": "registry",
+      "type": "registry"
+    },
+    "opencode": {
+      "type": "registry"
+    },
+    "grok-build": {
+      "type": "registry"
+    },
+    "codex-acp": {
+      "default_config_options": {
+        "mode": "agent-full-access",
+        "reasoning_effort": "high",
+        "model": "gpt-5.6-sol"
+      },
+      "type": "registry"
     },
   },
   "buffer_font_family": "JetBrainsMono Nerd Font",
@@ -108,12 +123,31 @@
       "args": [],
       "projects": [
         {
-          "paths": ["/home/thomas/.config/./"],
+          "paths": [
+            "/home/thomas/.config/./"
+          ]
         },
         {
-          "paths": ["/home/thomas/Developer/fff-gpui"],
+          "paths": [
+            "/home/thomas/Developer/fff-gpui"
+          ]
         },
-      ],
+        {
+          "paths": [
+            "/home/thomas/dev/th0jensen/bless"
+          ]
+        },
+        {
+          "paths": [
+            "/home/thomas/dev/th0jensen/portfolio"
+          ]
+        },
+        {
+          "paths": [
+            "/home/thomas/opt/kveldsgaming"
+          ]
+        }
+      ]
     },
     {
       "host": "windows",
@@ -121,10 +155,12 @@
       "args": [],
       "projects": [
         {
-          "paths": ["C:\\Users\\thomas/Developer/zed"],
-        },
-      ],
-    },
+          "paths": [
+            "C:\\Users\\thomas/Developer/zed"
+          ]
+        }
+      ]
+    }
   ],
   "project_panel": {
     "starts_open": false,
@@ -187,6 +223,24 @@
     "show_tab_bar_buttons": false,
   },
   "agent": {
+    "sandbox_permissions": {
+      "allow_unsandboxed": true,
+      "write_paths": [
+        "/Users/thomas/Library/Application Support/i3osx",
+        "/Users/thomas/Library/LaunchAgents",
+        "/Users/thomas/opt",
+        "/Users/thomas/.config/spacebar",
+        "/Users/thomas/.local/bin"
+      ],
+      "network_hosts": [
+        "developer.apple.com",
+        "thojensen.fly.dev",
+        "raw.githubusercontent.com",
+        "api.github.com",
+        "github.com",
+        "codeload.github.com"
+      ]
+    },
     "button": true,
     "default_profile": "write",
     "dock": "left",
@@ -199,7 +253,7 @@
       "effort": "medium",
       "enable_thinking": true,
       "provider": "openai-subscribed",
-      "model": "gpt-5.5",
+      "model": "gpt-6-astra",
     },
     "model_parameters": [],
   },
@@ -208,6 +262,11 @@
   "ui_font_family": "Alef",
   "buffer_font_size": 15,
   "theme": "Gruber Darker",
+  "show_whitespaces": "all",
+  "wrap_guides": [80],
+  "experimental.theme_overrides": {
+    "editor.invisible": "#374039"
+  },
   "languages": {
     "JSON": {
       "language_servers": ["!biome", "..."],
@@ -215,27 +274,8 @@
     "JSONC": {
       "language_servers": ["!biome", "..."],
     },
-  },
-  "language_models": {
-    "openai_compatible": {
-      "Foundation Models": {
-        "api_url": "http://127.0.0.1:1976/v1",
-        "available_models": [
-          {
-            "name": "system",
-            "display_name": "AFM 3 Core (7b)",
-            "max_tokens": 2048,
-            "capabilities": {
-              "tools": true,
-              "images": false,
-              "parallel_tool_calls": false,
-              "prompt_cache_key": false,
-              "chat_completions": true,
-              "interleaved_reasoning": false,
-            },
-          },
-        ],
-      },
-    },
+    "Make": {
+      "hard_tabs": true
+    }
   },
 }
