@@ -13,6 +13,7 @@ This repo is organized as stow packages. Current packages:
 - `git`
 - `helix`
 - `nushell`
+- `powershell`
 - `skhd`
 - `starship`
 - `tmux`
