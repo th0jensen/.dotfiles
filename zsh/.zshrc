@@ -11,3 +11,6 @@ case "$(uname -s)" in
     [[ -r "$zsh_config_dir/macos.zsh" ]] && source "$zsh_config_dir/macos.zsh"
     ;;
 esac
+
+# bun completions
+[ -s "/Users/thomas/.bun/_bun" ] && source "/Users/thomas/.bun/_bun"

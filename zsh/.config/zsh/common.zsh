@@ -305,6 +305,41 @@ img2png() {
     "${img%.*}-optimized.png"
 }
 
+# Create a 3-pane dev layout in Rex:
+# Top-left: Helix
+# Top-right: Opencode
+# Bottom: Prompt
+nic() {
+  [[ -z $REX_SESSION ]] && { echo "Not in a Rex session"; return 1; }
+  (( $+commands[jq] )) || { echo "jq is required but not installed"; return 1; }
+  local current_dir="${PWD}"
+
+  # Rename window to current directory name
+  rex window rename -s "$REX_SESSION" "$(basename "$current_dir")" >/dev/null
+
+  # Split below for shell (bottom, 35% height)
+  local bottom
+  bottom=$(rex split -s "$REX_SESSION" -b "$REX_BLOCK" --split=below --ratio 20 -c "$current_dir" --json | jq -r '.block_ids[0]')
+  [[ -z $bottom ]] && { echo "Failed to create bottom pane"; return 1; }
+
+  # Split right for gitu (top-right, 40% width)
+  local top_right
+  top_right=$(rex split -s "$REX_SESSION" -b "$REX_BLOCK" --split=right --ratio 65 -c "$current_dir" --json | jq -r '.block_ids[0]')
+  [[ -z $top_right ]] && { echo "Failed to create top-right pane"; return 1; }
+
+  # Launch OpenCode in current pane (top-left)
+  rex send -s "$REX_SESSION" -b "$REX_BLOCK" "opencode"
+  rex send-key -s "$REX_SESSION" -b "$REX_BLOCK" enter
+
+  # Launch gitu in top-right
+  rex send -s "$REX_SESSION" -b "$top_right" "hx -w ."
+  rex send-key -s "$REX_SESSION" -b "$top_right" enter
+
+  # Bottom pane stays as shell (empty prompt)
+  # Focus back to OpenCode (top-left)
+  rex focus -s "$REX_SESSION" "$REX_BLOCK"
+}
+
 function y() {
   local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
   command yazi "$@" --cwd-file="$tmp"

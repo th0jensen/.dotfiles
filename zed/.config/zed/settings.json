@@ -88,6 +88,9 @@
     "dock": "right",
   },
   "agent_servers": {
+    "antigravity-acp": {
+      "type": "registry"
+    },
     "pi-acp": {
       "default_config_options": {
         "model": "openai-codex/gpt-5.6-sol"
@@ -102,9 +105,10 @@
     },
     "codex-acp": {
       "default_config_options": {
+        "fast-mode": true,
         "mode": "agent-full-access",
         "reasoning_effort": "high",
-        "model": "gpt-5.6-sol"
+        "model": "gpt-6.1-sol"
       },
       "type": "registry"
     },
@@ -242,7 +246,7 @@
       ]
     },
     "button": true,
-    "default_profile": "write",
+    "default_profile": "ask",
     "dock": "left",
     "show_turn_stats": true,
     "use_modifier_to_send": false,
@@ -250,10 +254,10 @@
       "default": "allow",
     },
     "default_model": {
-      "effort": "medium",
+      "effort": "low",
       "enable_thinking": true,
       "provider": "openai-subscribed",
-      "model": "gpt-6-astra",
+      "model": "gpt-6.1-sol",
     },
     "model_parameters": [],
   },

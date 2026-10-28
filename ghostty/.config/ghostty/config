@@ -1,9 +1,10 @@
 command = /bin/zsh
 macos-titlebar-style = hidden
 auto-update-channel = tip
-background-opacity = 1
-window-padding-x = 5
-window-padding-y = 5
+background-opacity = 0.90
+background-blur = macos-glass-clear
+window-padding-x = 0
+window-padding-y = 0
 unfocused-split-opacity = 1
 split-divider-color = #000000
 theme = Gruber Darker
