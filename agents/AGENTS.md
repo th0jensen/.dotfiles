@@ -21,7 +21,7 @@ These instructions apply to all models working in this repository and any task r
 - Defaults: floating panes (tests/quick commands).
 - Tiled panes for deploy/run/handoff:
   - `rerp --tiled cargo run` (below the agent)
-  - `rerp --right --handoff terminal-browser open <URL> --split right --size 0.7` (beside the agent, PR/site; required for PR/website handoffs)
+  - `rerp --right --ratio 70 --handoff terminal-browser open <URL>` (beside the agent, PR/site; required for PR/website handoffs)
 - Inspect output with `rex capture` when a pane stays open.
 
 ## Commit authorship / co-authors

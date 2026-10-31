@@ -3,6 +3,7 @@ set -euo pipefail
 
 mode=floating
 split=below
+ratio=25
 keep=0
 label=""
 timeout=5
@@ -35,6 +36,7 @@ while [[ $# -gt 0 ]]; do
     --tiled|--tile|--deploy) mode=tiled; split=below; shift ;;
     --right|--beside|--handoff) mode=tiled; split=right; shift ;;
     --below) mode=tiled; split=below; shift ;;
+    --ratio) ratio="${2:?}"; shift 2 ;;
     --keep-open) keep=1; shift ;;
     --label) label="${2:?}"; shift 2 ;;
     --timeout) timeout="${2:?}"; shift 2 ;;
@@ -69,7 +71,7 @@ case "$mode" in
     [[ -n "$caller_window" ]] && window_arg=(-w "$caller_window")
     out=$(timeout "$timeout" rex run -s "$REX_SESSION" -b "$REX_BLOCK" \
       "${window_arg[@]}" \
-      --split="$split" --ratio 25 --focus=false \
+      --split="$split" --ratio "$ratio" --focus=false \
       --keep-open --wait --json --label "$label" -c "$cwd" -- "$@" 2>&1)
     status=$?
     set -e
