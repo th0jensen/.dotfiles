@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mode=tiled
+keep=0
+label=""
+timeout=5
+
+usage() {
+  cat >&2 <<'EOF'
+Usage: rerp [--float|--tiled] [--keep-open] [--label TEXT] [--timeout SEC] COMMAND [ARGS...]
+
+Run COMMAND in an ephemeral Rex pane. By default the pane is tiled beside the
+current pane and closes when the command exits. Use --float for a floating pane.
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --float|--floating) mode=floating; shift ;;
+    --tiled|--tile) mode=tiled; shift ;;
+    --keep-open) keep=1; shift ;;
+    --label) label="${2:?}"; shift 2 ;;
+    --timeout) timeout="${2:?}"; shift 2 ;;
+    --) shift; break ;;
+    -h|--help) usage; exit 0 ;;
+    *) break ;;
+  esac
+done
+
+if [[ $# -eq 0 ]]; then
+  usage
+  exit 2
+fi
+
+if [[ -z "${REX_SESSION:-}" || -z "${REX_BLOCK:-}" ]]; then
+  echo "rerp: REX_SESSION/REX_BLOCK not set (not running in Rex)" >&2
+  exit 1
+fi
+
+command_name="$1"
+if [[ -z "$label" ]]; then
+  label="rerp: $command_name"
+fi
+
+cwd="$PWD"
+
+case "$mode" in
+  tiled)
+    set +e
+    out=$(timeout "$timeout" rex run -s "$REX_SESSION" -b "$REX_BLOCK" \
+      --split=below --ratio 25 --focus=false \
+      --keep-open --wait --json --label "$label" -c "$cwd" -- "$@" 2>&1)
+    status=$?
+    set -e
+    blk=$(printf '%s\n' "$out" | jq -r '.block_ids[0] // empty' 2>/dev/null || true)
+    if [[ -z "$blk" ]]; then
+      printf '%s\n' "$out" >&2
+      exit 1
+    fi
+    if (( status == 124 )); then
+      # timed out: leave pane running
+      echo "rerp: still running in $blk"
+      exit 0
+    fi
+    # capture and close
+    rex capture -s "$REX_SESSION" -b "$blk" --trim 2>&1 || true
+    rex block close -s "$REX_SESSION" "$blk" >/dev/null 2>&1 || true
+    exit "$status"
+    ;;
+  floating)
+    payload=$(jq -nc --arg session "$REX_SESSION" --arg cwd "$cwd" --arg label "$label" --argjson cmd "$(printf '%s\n' "$@" | jq -R . | jq -s .)" '{
+      session_id: $session,
+      bounds: [0.15, 0.1, 0.7, 0.5],
+      layout: { block: { flavor: "com.superlogical.terminal.shell", label: $label, options: { command: $cmd, cwd: $cwd } } },
+      focus: false
+    }')
+    out=$(printf '%s' "$payload" | rex api call -s "$REX_SESSION" session.new_layer - 2>&1) || { printf '%s\n' "$out" >&2; exit 1; }
+    blk=$(printf '%s\n' "$out" | jq -r '.block_ids[0] // empty')
+    layer=$(printf '%s\n' "$out" | jq -r '.layer_id // empty')
+    if [[ -z "$blk" ]]; then
+      printf '%s\n' "$out" >&2
+      exit 1
+    fi
+    # poll briefly for completion
+    for ((i=0; i<timeout*2; i++)); do
+      sleep 0.5
+      if ! rex capture -s "$REX_SESSION" -b "$blk" --trim >/tmp/rerp-capture.$$ 2>/dev/null; then
+        # block gone => finished
+        if [[ -s /tmp/rerp-capture.$$ ]]; then cat /tmp/rerp-capture.$$; fi
+        rm -f /tmp/rerp-capture.$$
+        # best-effort close layer (already gone)
+        exit 0
+      fi
+      cp /tmp/rerp-capture.$$ /tmp/rerp-last.$$
+    done
+    echo "rerp: still running in layer $layer block $blk" >&2
+    if [[ -f /tmp/rerp-last.$$ ]]; then cat /tmp/rerp-last.$$; fi
+    rm -f /tmp/rerp-capture.$$ /tmp/rerp-last.$$
+    exit 0
+    ;;
+esac
