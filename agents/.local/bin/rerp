@@ -85,8 +85,10 @@ case "$mode" in
     exit "$status"
     ;;
   floating)
-    payload=$(jq -nc --arg session "$REX_SESSION" --arg cwd "$cwd" --arg label "$label" --argjson cmd "$(printf '%s\n' "$@" | jq -R . | jq -s .)" '{
+    caller_window=$(rex block inspect "$REX_BLOCK" --json 2>/dev/null | jq -r '.block.window_id // empty')
+    payload=$(jq -nc --arg session "$REX_SESSION" --arg cwd "$cwd" --arg label "$label" --arg window "$caller_window" --argjson cmd "$(printf '%s\n' "$@" | jq -R . | jq -s .)" '{
       session_id: $session,
+      window_id: (if $window == "" then null else $window end),
       bounds: [0.15, 0.1, 0.7, 0.5],
       layout: { block: { flavor: "com.superlogical.terminal.shell", label: $label, options: { command: $cmd, cwd: $cwd } } },
       focus: false

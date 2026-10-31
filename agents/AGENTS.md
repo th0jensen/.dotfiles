@@ -14,7 +14,7 @@ These instructions apply to all models working in this repository and any task r
 
 ## Run commands through rerp
 
-- Prefer the `rerp` skill/script for all commands (`grep`, `cargo run`, builds, tests, deploys, servers).
+- Use `rerp` for nearly all command execution (grep, builds, tests, deploys, servers, etc.). Avoid direct terminal execution except for trivial/meta tasks or when rerp is unavailable.
 - Usage: prefix the command with `rerp`:
   - `rerp grep -R "foo" .` (floating by default)
   - `rerp cargo run -- --` ...
