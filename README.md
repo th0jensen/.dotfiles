@@ -14,10 +14,8 @@ This repo is organized as stow packages. Current packages:
 - `helix`
 - `nushell`
 - `powershell`
-- `skhd`
 - `starship`
 - `tmux`
-- `yabai`
 - `zed`
 
 Each top-level directory contains the files that should be symlinked into `$HOME`.
