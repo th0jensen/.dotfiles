@@ -83,9 +83,11 @@ case "$mode" in
       echo "rerp: still running in $blk"
       exit 0
     fi
-    # capture and close
+    # capture; close unless --keep-open was requested
     rex capture -s "$REX_SESSION" -b "$blk" --trim 2>&1 || true
-    rex block close -s "$REX_SESSION" "$blk" >/dev/null 2>&1 || true
+    if (( keep == 0 )); then
+      rex block close -s "$REX_SESSION" "$blk" >/dev/null 2>&1 || true
+    fi
     exit "$status"
     ;;
   floating)
