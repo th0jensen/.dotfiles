@@ -104,21 +104,6 @@ case "$mode" in
       printf '%s\n' "$out" >&2
       exit 1
     fi
-    # poll briefly for completion
-    for ((i=0; i<timeout*2; i++)); do
-      sleep 0.5
-      if ! rex capture -s "$REX_SESSION" -b "$blk" --trim >/tmp/rerp-capture.$$ 2>/dev/null; then
-        # block gone => finished
-        if [[ -s /tmp/rerp-capture.$$ ]]; then cat /tmp/rerp-capture.$$; fi
-        rm -f /tmp/rerp-capture.$$
-        # best-effort close layer (already gone)
-        exit 0
-      fi
-      cp /tmp/rerp-capture.$$ /tmp/rerp-last.$$
-    done
-    echo "rerp: still running in layer $layer block $blk" >&2
-    if [[ -f /tmp/rerp-last.$$ ]]; then cat /tmp/rerp-last.$$; fi
-    rm -f /tmp/rerp-capture.$$ /tmp/rerp-last.$$
-    exit 0
+    echo "rerp: floating pane layer=$layer block=$blk"
     ;;
 esac
