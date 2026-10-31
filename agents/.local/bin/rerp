@@ -60,11 +60,15 @@ if [[ -z "$label" ]]; then
 fi
 
 cwd="$PWD"
+caller_window=$(rex block inspect "$REX_BLOCK" --json 2>/dev/null | jq -r '.block.window_id // empty')
 
 case "$mode" in
   tiled)
     set +e
+    window_arg=()
+    [[ -n "$caller_window" ]] && window_arg=(-w "$caller_window")
     out=$(timeout "$timeout" rex run -s "$REX_SESSION" -b "$REX_BLOCK" \
+      "${window_arg[@]}" \
       --split="$split" --ratio 25 --focus=false \
       --keep-open --wait --json --label "$label" -c "$cwd" -- "$@" 2>&1)
     status=$?
