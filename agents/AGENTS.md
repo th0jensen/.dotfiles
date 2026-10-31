@@ -30,9 +30,10 @@ When creating git commits, include co-author trailers naming both the model and 
 
 ```
 Co-authored-by: Beam (Beam-1.0-501B-A23B)
-Co-authored-by: Factory Droid 1.1.0
+Co-authored-by: Factory Droid 1.1.0 <138933559+factory-droid[bot]@users.noreply.github.com>
 ```
 
+- Always include the harness git email above so GitHub shows the Droid icon.
 - Replace the model line with the actual model name and version in use.
 - Obtain the harness version from `droid --version`.
 - Use the existing configured git identity for the author/committer; do not override it.
