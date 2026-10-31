@@ -1,24 +1,40 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-mode=tiled
+mode=floating
+split=below
 keep=0
 label=""
 timeout=5
 
 usage() {
   cat >&2 <<'EOF'
-Usage: rerp [--float|--tiled] [--keep-open] [--label TEXT] [--timeout SEC] COMMAND [ARGS...]
+Usage: rerp [options] COMMAND [ARGS...]
 
-Run COMMAND in an ephemeral Rex pane. By default the pane is tiled beside the
-current pane and closes when the command exits. Use --float for a floating pane.
+Run COMMAND in an ephemeral Rex pane.
+
+Defaults:
+  - floating pane (good for tests and quick commands)
+  - use --tiled for deploy/run/handoff terminals (default below)
+  - use --right/--beside for a pane next to the agent (PRs, browser)
+
+Options:
+  --float|--floating        floating pane (default)
+  --tiled|--tile|--deploy   tiled pane
+  --right|--beside|--handoff tiled pane to the right/beside the agent
+  --below                   tiled pane below the agent (default tiled placement)
+  --keep-open               keep pane open after exit
+  --label TEXT              pane label
+  --timeout SEC             wait at most SEC seconds (default 5)
 EOF
 }
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --float|--floating) mode=floating; shift ;;
-    --tiled|--tile) mode=tiled; shift ;;
+    --tiled|--tile|--deploy) mode=tiled; split=below; shift ;;
+    --right|--beside|--handoff) mode=tiled; split=right; shift ;;
+    --below) mode=tiled; split=below; shift ;;
     --keep-open) keep=1; shift ;;
     --label) label="${2:?}"; shift 2 ;;
     --timeout) timeout="${2:?}"; shift 2 ;;
@@ -49,7 +65,7 @@ case "$mode" in
   tiled)
     set +e
     out=$(timeout "$timeout" rex run -s "$REX_SESSION" -b "$REX_BLOCK" \
-      --split=below --ratio 25 --focus=false \
+      --split="$split" --ratio 25 --focus=false \
       --keep-open --wait --json --label "$label" -c "$cwd" -- "$@" 2>&1)
     status=$?
     set -e

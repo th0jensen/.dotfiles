@@ -11,9 +11,12 @@ These instructions apply to all models working in this repository and any task r
 
 - Prefer the `rerp` skill/script for all commands (`grep`, `cargo run`, builds, tests, deploys, servers).
 - Usage: prefix the command with `rerp`:
-  - `rerp grep -R "foo" .`
-  - `rerp cargo run`
-- Use `rerp --float ...` for floating panes and `rerp --tiled ...` (default) for tiled panes.
+  - `rerp grep -R "foo" .` (floating by default)
+  - `rerp cargo run -- --` ...
+- Defaults: floating panes (tests/quick commands).
+- Tiled panes for deploy/run/handoff:
+  - `rerp --tiled cargo run` (below the agent)
+  - `rerp --right --handoff ...` (beside the agent, e.g. PR in terminal browser)
 - Inspect output with `rex capture` when a pane stays open.
 
 ## Commit authorship / co-authors

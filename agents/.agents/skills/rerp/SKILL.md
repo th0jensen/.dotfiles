@@ -15,11 +15,15 @@ rerp cargo run
 ## When to use
 - Prefer `rerp` for every command that produces output, builds, tests, deploys, or runs long-lived processes.
 - It keeps the agent's own terminal clean and leaves evidence in a Rex pane.
-- Use `--float` for a floating pane; default is a tiled pane below the current one.
+- Default is a floating pane. Use floating for tests and quick commands.
+- Use tiled panes for deploy/run/handoff terminals:
+  - cargo run and dev servers: `rerp --tiled cargo run` (below the agent)
+  - PR handoff / terminal browser: `rerp --right --handoff ...` (beside the agent)
 
 ## Options
-- `--float` / `--floating`: create a floating pane.
-- `--tiled`: create a tiled pane (default).
+- `--float` / `--floating`: floating pane (default)
+- `--tiled` / `--tile` / `--deploy`: tiled pane below the agent
+- `--right` / `--beside` / `--handoff`: tiled pane beside the agent
 - `--keep-open`: keep the pane open even after the command exits.
 - `--label TEXT`: label the pane.
 - `--timeout SEC`: wait at most SEC seconds before leaving the pane running (default 5).
