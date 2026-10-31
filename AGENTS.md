@@ -7,6 +7,11 @@ These instructions apply to all models working in this repository and any task r
 - Activate and follow the `rex` skill for any terminal, pane, tab, session, deployment, or command orchestration work.
 - Do not script the Rex app directly. Use the `rex` CLI and documented Rex APIs.
 
+## Search efficiently
+
+- Scope `grep`, `rg`, and `find` as narrowly as possible (specific paths, file types, extensions, and ignored directories) to avoid long-running searches.
+- Prefer targeted searches over repository-wide scans.
+
 ## Run commands through rerp
 
 - Prefer the `rerp` skill/script for all commands (`grep`, `cargo run`, builds, tests, deploys, servers).
