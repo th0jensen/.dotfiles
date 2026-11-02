@@ -88,6 +88,9 @@
     "dock": "right",
   },
   "agent_servers": {
+    "factory-droid": {
+      "type": "registry"
+    },
     "antigravity-acp": {
       "type": "registry"
     },
