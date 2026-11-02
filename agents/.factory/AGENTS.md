@@ -17,6 +17,7 @@ These instructions apply to all models working in this repository and any task r
 
 - Scope `grep`, `rg`, and `find` as narrowly as possible (specific paths, file types, extensions, and ignored directories) to avoid long-running searches.
 - Prefer targeted searches over repository-wide scans.
+- Once the directory or scope is already known, do not run `find /`, `grep /`, or other root-wide scans; search the known path directly.
 
 ## Run commands through rerp (required)
 
