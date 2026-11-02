@@ -21,10 +21,12 @@ These instructions apply to all models working in this repository and any task r
 ## Run commands through rerp (required)
 
 - rerp is not optional. Every command goes through rerp.
-- Ephemeral tasks use floating panes (default).
-- Tiled panes are only for long-running or handoff info:
-  - `rerp --tiled cargo run` (below the agent)
+- Short running tasks: floating panes (default).
+- Long running tasks meant to be seen by the user (test results, compilation, etc.): tiled panes:
+  - `rerp --tiled cargo test` (below the agent)
+  - `rerp --tiled cargo build` (below the agent)
   - `rerp --right --ratio 70 --handoff terminal-browser open <URL>` (beside the agent, PR/site; required for PR/website handoffs)
+- Tiled is exclusively for long-running/handoff info. Do not tile short commands.
 - Long-running tasks: use `--keep-open` and inspect with `rex capture`.
 - Usage: prefix the command with `rerp`:
   - `rerp grep -R "foo" .`
