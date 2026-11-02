@@ -1,3 +1,42 @@
 {
-  "outputStyle": "file:221932a851b302ce3ce89724627d305dd2bbc212f4f31d114d17add192123ce7/israeli"
+  "logoAnimation": "always",
+  "outputStyle": "israeli",
+  "completionSound": "off",
+  "awaitingInputSound": "off",
+  "subagentSounds": "off",
+  "trustedFolders": {
+    "/Users/thomas/Developer/th0jensen/fff-gpui": {
+      "trustedAt": "2026-10-31T21:05:35.798Z"
+    },
+    "/Users/thomas/.dotfiles": {
+      "trustedAt": "2026-10-31T22:24:11.604Z"
+    },
+    "/Users/thomas/Developer/th0jensen/i3osx": {
+      "trustedAt": "2026-11-01T01:00:44.835Z"
+    },
+    "/Users/thomas/opt/browser": {
+      "trustedAt": "2026-11-01T01:13:41.977Z"
+    },
+    "/Users/thomas/Developer/th0jensen/homebrew-fff-gpui": {
+      "trustedAt": "2026-11-01T01:56:55.229Z"
+    },
+    "/Users/thomas/.factory": {
+      "trustedAt": "2026-11-02T17:28:30.481Z"
+    },
+    "/Users/thomas": {
+      "trustedAt": "2026-11-02T18:27:35.067Z"
+    }
+  },
+  "customModels": [
+    {
+      "model": "Beam-1.0-501B-A23B",
+      "baseUrl": "https://api.reflection.ai/openai/v1",
+      "apiKey": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImFwaS10b2tlbi1qd3QiLCJ0eXAiOiJyZWZsZWN0aW9uLWFwaStqd3QifQ.eyJpc3MiOiJyZWZsZWN0aW9uYWktZXh0ZXJuYWwtYXBpLWZvdW5kYXRpb24vcHJvZHVjdGlvbi9hcGktdG9rZW5zIiwiYXVkIjpbInJlZmxlY3Rpb24tYXBpIl0sImlhdCI6MTc5MzQ4MzU0OCwianRpIjoiNDI1NTdlZGEtZTIyNy00OTU0LWE0MGMtNzMyZGYzYmU2MTM4Iiwib3JnX2lkIjoiMDQwM2I0MmQtYzY4Ni00OTE2LWEzMDUtMTgyYWU1YmQwNTM2IiwicHJvamVjdF9pZCI6ImI1Y2MyYjU5LThlYmQtNDVkZC04NzM1LTdmZmE0ZDk4Yjc5MyIsInVzZXJfaWQiOiJmNTM3OWZmYS1lMDdiLTRjZWEtOGVhYi1jMWYzNzk5MWM4OGQifQ.xuB0dgRCN9ogETiZqN5CwoIX5Q_pSX2XQcwlvR7LGGME1ERuXtn8og5CXyyUrNWdcotm4lrRy4h_D3qhnVFNKg",
+      "provider": "generic-chat-completion-api"
+    }
+  ],
+  "sessionDefaultSettings": {
+    "model": "custom:Beam-1.0-501B-A23B-0",
+    "reasoningEffort": "high"
+  }
 }

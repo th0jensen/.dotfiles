@@ -1,5 +1,5 @@
 command = /bin/zsh
-macos-titlebar-style = hidden
+macos-titlebar-style = tabs
 auto-update-channel = tip
 background-opacity = 0.90
 background-blur = macos-glass-clear

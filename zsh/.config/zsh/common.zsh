@@ -328,7 +328,7 @@ nic() {
   [[ -z $top_right ]] && { echo "Failed to create top-right pane"; return 1; }
 
   # Launch OpenCode in current pane (top-left)
-  rex send -s "$REX_SESSION" -b "$REX_BLOCK" "opencode"
+  rex send -s "$REX_SESSION" -b "$REX_BLOCK" "droid"
   rex send-key -s "$REX_SESSION" -b "$REX_BLOCK" enter
 
   # Launch gitu in top-right
