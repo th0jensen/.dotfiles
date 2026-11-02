@@ -41,8 +41,14 @@ fi
 for dir in */; do
   package="${dir%/}"
   [[ "$package" == ".git" ]] && continue
-  echo "Stowing $package..."
-  stow -Rv "$package"
+  echo "Stowing $package (adopting existing files)..."
+  stow -Rv --adopt --ignore='\.DS_Store' --ignore='output-styles' "$package"
+done
+
+echo "Syncing output styles..."
+mkdir -p "$HOME/.factory/output-styles"
+find . -path '*/.factory/output-styles/*.md' -print0 | while IFS= read -r -d '' f; do
+  cp "$f" "$HOME/.factory/output-styles/$(basename "$f")"
 done
 
 echo "Dotfiles applied."

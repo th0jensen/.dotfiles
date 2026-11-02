@@ -7,22 +7,28 @@ These instructions apply to all models working in this repository and any task r
 - Activate and follow the `rex` skill for any terminal, pane, tab, session, deployment, or command orchestration work.
 - Do not script the Rex app directly. Use the `rex` CLI and documented Rex APIs.
 
+## Output style (israeli, default)
+
+- ALWAYS activate and follow the `israeli` skill for output. It is the default output type for every response.
+- Direct, concise, no fluff. No hedging, no apologies, no "would you like me to".
+- Do not produce standard verbose prose; use israeli voice unless user explicitly asks otherwise.
+
 ## Search efficiently
 
 - Scope `grep`, `rg`, and `find` as narrowly as possible (specific paths, file types, extensions, and ignored directories) to avoid long-running searches.
 - Prefer targeted searches over repository-wide scans.
 
-## Run commands through rerp
+## Run commands through rerp (required)
 
-- Use `rerp` for nearly all command execution (grep, builds, tests, deploys, servers, etc.). Avoid direct terminal execution except for trivial/meta tasks or when rerp is unavailable.
-- Usage: prefix the command with `rerp`:
-  - `rerp grep -R "foo" .` (floating by default)
-  - `rerp cargo run -- --` ...
-- Defaults: floating panes (tests/quick commands).
-- Tiled panes for deploy/run/handoff:
+- rerp is not optional. Every command goes through rerp.
+- Ephemeral tasks use floating panes (default).
+- Tiled panes are only for long-running or handoff info:
   - `rerp --tiled cargo run` (below the agent)
   - `rerp --right --ratio 70 --handoff terminal-browser open <URL>` (beside the agent, PR/site; required for PR/website handoffs)
-- Inspect output with `rex capture` when a pane stays open.
+- Long-running tasks: use `--keep-open` and inspect with `rex capture`.
+- Usage: prefix the command with `rerp`:
+  - `rerp grep -R "foo" .`
+  - `rerp cargo run -- --` ...
 
 ## Commit authorship / co-authors
 

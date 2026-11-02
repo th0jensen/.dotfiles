@@ -6,7 +6,6 @@ split=below
 ratio=25
 keep=0
 label=""
-timeout=5
 
 usage() {
   cat >&2 <<'EOF'
@@ -26,7 +25,6 @@ Options:
   --below                   tiled pane below the agent (default tiled placement)
   --keep-open               keep pane open after exit
   --label TEXT              pane label
-  --timeout SEC             wait at most SEC seconds (default 5)
 EOF
 }
 
@@ -39,7 +37,6 @@ while [[ $# -gt 0 ]]; do
     --ratio) ratio="${2:?}"; shift 2 ;;
     --keep-open) keep=1; shift ;;
     --label) label="${2:?}"; shift 2 ;;
-    --timeout) timeout="${2:?}"; shift 2 ;;
     --) shift; break ;;
     -h|--help) usage; exit 0 ;;
     *) break ;;
@@ -69,7 +66,7 @@ case "$mode" in
     set +e
     window_arg=()
     [[ -n "$caller_window" ]] && window_arg=(-w "$caller_window")
-    out=$(timeout "$timeout" rex run -s "$REX_SESSION" -b "$REX_BLOCK" \
+    out=$(rex run -s "$REX_SESSION" -b "$REX_BLOCK" \
       "${window_arg[@]}" \
       --split="$split" --ratio "$ratio" --focus=false \
       --keep-open --wait --json --label "$label" -c "$cwd" -- "$@" 2>&1)
@@ -79,11 +76,6 @@ case "$mode" in
     if [[ -z "$blk" ]]; then
       printf '%s\n' "$out" >&2
       exit 1
-    fi
-    if (( status == 124 )); then
-      # timed out: leave pane running
-      echo "rerp: still running in $blk"
-      exit 0
     fi
     # capture; close unless --keep-open was requested
     rex capture -s "$REX_SESSION" -b "$blk" --trim 2>&1 || true
