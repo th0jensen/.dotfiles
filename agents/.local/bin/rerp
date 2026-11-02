@@ -4,7 +4,7 @@ set -euo pipefail
 mode=floating
 split=below
 ratio=25
-keep=0
+wait_mode=0
 label=""
 
 usage() {
@@ -23,7 +23,8 @@ Options:
   --tiled|--tile|--deploy   tiled pane
   --right|--beside|--handoff tiled pane to the right/beside the agent
   --below                   tiled pane below the agent (default tiled placement)
-  --keep-open               keep pane open after exit
+  --ratio NUM               tiled split ratio (default 25)
+  --wait                    wait for command exit and capture output
   --label TEXT              pane label
 EOF
 }
@@ -35,7 +36,7 @@ while [[ $# -gt 0 ]]; do
     --right|--beside|--handoff) mode=tiled; split=right; shift ;;
     --below) mode=tiled; split=below; shift ;;
     --ratio) ratio="${2:?}"; shift 2 ;;
-    --keep-open) keep=1; shift ;;
+    --wait) wait_mode=1; shift ;;
     --label) label="${2:?}"; shift 2 ;;
     --) shift; break ;;
     -h|--help) usage; exit 0 ;;
@@ -59,17 +60,24 @@ if [[ -z "$label" ]]; then
 fi
 
 cwd="$PWD"
-caller_window=$(rex block inspect "$REX_BLOCK" --json 2>/dev/null | jq -r '.block.window_id // empty')
 
 case "$mode" in
   tiled)
     set +e
+    caller_window=$(rex block inspect "$REX_BLOCK" --json 2>/dev/null | jq -r '.block.window_id // empty')
     window_arg=()
     [[ -n "$caller_window" ]] && window_arg=(-w "$caller_window")
-    out=$(rex run -s "$REX_SESSION" -b "$REX_BLOCK" \
-      "${window_arg[@]}" \
-      --split="$split" --ratio "$ratio" --focus=false \
-      --keep-open --wait --json --label "$label" -c "$cwd" -- "$@" 2>&1)
+    if (( wait_mode == 1 )); then
+      out=$(rex run -s "$REX_SESSION" -b "$REX_BLOCK" \
+        "${window_arg[@]}" \
+        --split="$split" --ratio "$ratio" --focus=false \
+        --keep-open --wait --json --label "$label" -c "$cwd" -- "$@" 2>&1)
+    else
+      out=$(rex run -s "$REX_SESSION" -b "$REX_BLOCK" \
+        "${window_arg[@]}" \
+        --split="$split" --ratio "$ratio" --focus=false \
+        --keep-open --json --label "$label" -c "$cwd" -- "$@" 2>&1)
+    fi
     status=$?
     set -e
     blk=$(printf '%s\n' "$out" | jq -r '.block_ids[0] // empty' 2>/dev/null || true)
@@ -77,29 +85,30 @@ case "$mode" in
       printf '%s\n' "$out" >&2
       exit 1
     fi
-    # capture; close unless --keep-open was requested
-    rex capture -s "$REX_SESSION" -b "$blk" --trim 2>&1 || true
-    if (( keep == 0 )); then
-      rex block close -s "$REX_SESSION" "$blk" >/dev/null 2>&1 || true
+    if (( wait_mode == 1 )); then
+      rex capture -s "$REX_SESSION" -b "$blk" --trim 2>&1 || true
+    else
+      # Give a brief head start for initial output.
+      sleep 0.3
+      rex capture -s "$REX_SESSION" -b "$blk" --trim 2>&1 || true
     fi
+    echo "rerp: tiled pane block=$blk"
     exit "$status"
     ;;
   floating)
-    caller_window=$(rex block inspect "$REX_BLOCK" --json 2>/dev/null | jq -r '.block.window_id // empty')
-    payload=$(jq -nc --arg session "$REX_SESSION" --arg cwd "$cwd" --arg label "$label" --arg window "$caller_window" --argjson cmd "$(printf '%s\n' "$@" | jq -R . | jq -s .)" '{
-      session_id: $session,
-      window_id: (if $window == "" then null else $window end),
-      bounds: [0.15, 0.1, 0.7, 0.5],
-      layout: { block: { flavor: "com.superlogical.terminal.shell", label: $label, options: { command: $cmd, cwd: $cwd } } },
-      focus: false
-    }')
-    out=$(printf '%s' "$payload" | rex api call -s "$REX_SESSION" session.new_layer - 2>&1) || { printf '%s\n' "$out" >&2; exit 1; }
-    blk=$(printf '%s\n' "$out" | jq -r '.block_ids[0] // empty')
-    layer=$(printf '%s\n' "$out" | jq -r '.layer_id // empty')
+    set +e
+    out=$(rex run --wait --keep-open --json --focus=false \
+      --label "$label" -c "$cwd" -- "$@" 2>&1)
+    status=$?
+    set -e
+    blk=$(printf '%s\n' "$out" | jq -r '.block_ids[0] // empty' 2>/dev/null || true)
     if [[ -z "$blk" ]]; then
       printf '%s\n' "$out" >&2
       exit 1
     fi
-    echo "rerp: floating pane layer=$layer block=$blk"
+    rex capture -s "$REX_SESSION" -b "$blk" --trim 2>&1 || true
+    rex block close -s "$REX_SESSION" "$blk" >/dev/null 2>&1 || true
+    echo "rerp: floating exit=$status block=$blk"
+    exit "$status"
     ;;
 esac

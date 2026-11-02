@@ -27,7 +27,10 @@ These instructions apply to all models working in this repository and any task r
   - `rerp --tiled cargo build` (below the agent)
   - `rerp --right --ratio 70 --handoff terminal-browser open <URL>` (beside the agent, PR/site; required for PR/website handoffs)
 - Tiled is exclusively for long-running/handoff info. Do not tile short commands.
-- Long-running tasks: use `--keep-open` and inspect with `rex capture`.
+- Tiled launches do not block by default; add `--wait` when output is needed. Handoff tabs must not block completion.
+- Tiled tabs persist after the command exits. rerp prints `rerp: tiled pane block=BLOCK`.
+- Keep the window clean: capture output with `rex capture`, then close finished tiled tabs with `rex block close`; do not leave stale or duplicate tabs.
+- Only close or manage tabs created by the current rerp invocation; never touch unrelated blocks.
 - Usage: prefix the command with `rerp`:
   - `rerp grep -R "foo" .`
   - `rerp cargo run -- --` ...

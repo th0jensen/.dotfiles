@@ -14,6 +14,8 @@ Prefix command: `rerp CMD...`
   - `rerp --tiled cargo build` (below the agent)
 - Tiled beside: `rerp --right --handoff CMD` (PR/browser)
 - Tiled is exclusively for long-running/handoff info.
-- Long-running: add `--keep-open`.
-- Capture if still open: `rex capture -s "$REX_SESSION" -b BLOCK --trim`
-- Close: `rex block close ...`
+- Tiled launches do not block by default; they return immediately. Add `--wait` when output is needed.
+- Tiled tabs persist after the command finishes. rerp prints `rerp: tiled pane block=BLOCK`.
+- Manage tiled tabs: capture with `rex capture -s "$REX_SESSION" -b BLOCK --trim`; close finished ones with `rex block close -s "$REX_SESSION" BLOCK`.
+- Only interact with blocks/tabs created by the current rerp invocation; do not close unrelated blocks.
+- Keep the window clean: close tiled tabs once their output is no longer needed; avoid stale or duplicate tabs. Do not tile short commands.
