@@ -33,17 +33,40 @@ alias make="make -j$(nproc)"
 alias ninja="ninja -j$(nproc)"
 alias n="ninja"
 alias c="clear"
-alias rmpkg="sudo pacman -Rsn"
-alias cleanch="sudo pacman -Scc"
-alias fixpacman="sudo rm /var/lib/pacman/db.lck"
-alias update="sudo pacman -Syu"
-alias cleanup="sudo pacman -Rsn $(pacman -Qtdq)"
-alias apt="man pacman"
-alias apt-get="man pacman"
 alias please="sudo"
 alias tb="nc termbin.com 9999"
 alias jctl="journalctl -p 3 -xb"
-alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
+
+if command -v pacman >/dev/null 2>&1; then
+  # Arch / Cachy (pacman)
+  alias rmpkg="sudo pacman -Rsn"
+  alias cleanch="sudo pacman -Scc"
+  alias fixpacman="sudo rm -f /var/lib/pacman/db.lck"
+  alias update="sudo pacman -Syu"
+  alias apt="man pacman"
+  alias apt-get="man pacman"
+  alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
+  cleanup() {
+    local orphans
+    orphans="$(pacman -Qtdq)"
+    if [[ -n "$orphans" ]]; then
+      sudo pacman -Rsn $orphans
+    else
+      echo "No orphan packages found"
+    fi
+  }
+elif command -v dnf >/dev/null 2>&1; then
+  # Fedora (dnf)
+  alias rmpkg="sudo dnf remove"
+  alias cleanch="sudo dnf clean all"
+  alias fixdnf="sudo rm -f /var/lib/dnf/rpmdb.lock"
+  alias update="sudo dnf upgrade"
+  alias apt="man dnf"
+  alias apt-get="man dnf"
+  cleanup() {
+    sudo dnf autoremove
+  }
+fi
 
 [[ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && \
   source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
