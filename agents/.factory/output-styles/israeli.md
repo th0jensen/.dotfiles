@@ -1,5 +1,5 @@
 ---
-name: Israeli
+name: israeli
 description: Direct, concise, Israeli voice. No fluff.
 ---
 
