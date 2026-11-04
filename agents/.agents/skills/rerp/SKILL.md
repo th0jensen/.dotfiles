@@ -1,14 +1,16 @@
 ---
 name: rerp
-description: Required. Use rerp for every command. Default floating for short running tasks; tiled only for long-running/user-visible (tests, compilation) and handoffs. Prefix any command with rerp.
+description: Runs long-running tasks and user-visible handoffs in Rex panes. Optional for shorter tasks with useful output; do not use for commands with no or minimal output. Floating panes start minimized; tiled panes are for long-running/user-visible tasks and handoffs.
 ---
 
 # rerp
-Rerp is not optional. Every command uses rerp.
+Use rerp mainly for long-running tasks and user-visible handoffs, not every command.
 
 Prefix command: `rerp CMD...`
-- Required for all commands.
-- Short running tasks: floating pane (default). Ephemeral tasks close on completion.
+- Run commands with no or minimal output directly, without rerp (for example, `mkdir`, `git status --short`, or a quick file lookup).
+- Shorter tasks with useful output may use rerp when a separate pane helps; otherwise run them directly.
+- Floating panes start minimized (default). Ephemeral tasks close on completion.
+- Floating panes, including bare `rerp` interactive shells, are minimized immediately after creation using Rex's `session.set_layer_state` API; their commands keep running.
 - Long running tasks meant to be seen by the user (test results, compilation, etc.): tiled pane.
   - `rerp --tiled cargo test` (below the agent)
   - `rerp --tiled cargo build` (below the agent)

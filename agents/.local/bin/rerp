@@ -14,7 +14,7 @@ Usage: rerp [options] COMMAND [ARGS...]
 Run COMMAND in an ephemeral Rex pane.
 
 Defaults:
-  - floating pane (good for tests and quick commands)
+  - minimized floating pane for quick commands
   - use --tiled for deploy/run/handoff terminals (default below)
   - use --right/--beside for a pane next to the agent (PRs, browser)
 
@@ -120,6 +120,9 @@ case "$mode" in
         printf '%s\n' "$out" >&2
         exit 1
       fi
+      jq -nc --arg session "$REX_SESSION" --arg layer "$layer" \
+        '{session_id: $session, layer_id: $layer, state: "minimized"}' |
+        rex api call session.set_layer_state - >/dev/null
       echo "rerp: floating shell layer=$layer block=$blk"
       exit 0
     fi
@@ -144,6 +147,10 @@ case "$mode" in
       printf '%s\n' "$out" >&2
       exit 1
     fi
+
+    jq -nc --arg session "$REX_SESSION" --arg layer "$layer" \
+      '{session_id: $session, layer_id: $layer, state: "minimized"}' |
+      rex api call session.set_layer_state - >/dev/null
 
     exit_status=124
     deadline=$((SECONDS + 60))

@@ -19,10 +19,12 @@ These instructions apply to all models working in this repository and any task r
 - Prefer targeted searches over repository-wide scans.
 - Once the directory or scope is already known, do not run `find /`, `grep /`, or other root-wide scans; search the known path directly.
 
-## Run commands through rerp (required)
+## Use rerp for long-running tasks and handoffs
 
-- rerp is not optional. Every command goes through rerp.
-- Short running tasks: floating panes (default).
+- Use rerp mainly for long-running tasks and user-visible handoffs, not every command.
+- Run commands with no or minimal output directly, without rerp (for example, `mkdir`, `git status --short`, or a quick file lookup).
+- Shorter tasks with useful output may use rerp when a separate pane helps; otherwise run them directly.
+- Floating panes start minimized (default).
 - Long running tasks meant to be seen by the user (test results, compilation, etc.): tiled panes:
   - `rerp --tiled cargo test` (below the agent)
   - `rerp --tiled cargo build` (below the agent)
@@ -33,7 +35,6 @@ These instructions apply to all models working in this repository and any task r
 - Keep the window clean: capture output with `rex capture`, then close finished tiled tabs with `rex block close`; do not leave stale or duplicate tabs.
 - Only close or manage tabs created by the current rerp invocation; never touch unrelated blocks.
 - Usage: prefix the command with `rerp`:
-  - `rerp grep -R "foo" .`
   - `rerp cargo run -- --` ...
 
 ## Commit authorship / co-authors
