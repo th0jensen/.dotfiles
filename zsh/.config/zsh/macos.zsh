@@ -1,10 +1,22 @@
 export DOTFILES_PLATFORM=macos
 
 if [[ -x /opt/homebrew/bin/brew ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+  homebrew_prefix=/opt/homebrew
 elif [[ -x /usr/local/bin/brew ]]; then
-  eval "$(/usr/local/bin/brew shellenv)"
+  homebrew_prefix=/usr/local
 fi
+
+if [[ -n $homebrew_prefix ]]; then
+  # Reuse inherited shellenv exports, but keep Homebrew's PATH precedence.
+  if [[ $HOMEBREW_PREFIX != "$homebrew_prefix" ||
+        -z $HOMEBREW_CELLAR || -z $HOMEBREW_REPOSITORY ||
+        $INFOPATH != "$homebrew_prefix/share/info:"* ||
+        ( -n $MANPATH && $MANPATH != :* ) ]]; then
+    eval "$("$homebrew_prefix/bin/brew" shellenv)"
+  fi
+  path=("$homebrew_prefix/bin" "$homebrew_prefix/sbin" $path)
+fi
+unset homebrew_prefix
 
 export EDITOR="zed"
 

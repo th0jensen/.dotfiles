@@ -38,5 +38,52 @@
   "sessionDefaultSettings": {
     "model": "custom:Beam-1.0-501B-A23B-0",
     "reasoningEffort": "high"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/thomas/.local/share/rex-agent-resume/bin/rex-agent-resume-hook droid",
+            "timeout": 10,
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/thomas/.local/bin/rexmod hook prompt --agent droid",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/thomas/.local/bin/rexmod hook stop --agent droid",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/thomas/.local/bin/rexmod hook notification --agent droid",
+            "timeout": 15
+          }
+        ],
+        "matcher": "idle_prompt"
+      }
+    ]
   }
 }
