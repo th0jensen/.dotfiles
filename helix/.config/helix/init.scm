@@ -132,7 +132,3 @@
       (E ":grove-visibility-toggle!")
       (f ":microscope-file-picker")
       (G ":microscope-grep-picker"))))
-
-;; >>> rexmod
-(require "/Users/thomas/Library/Application Support/rexmod/helix/rexmod.scm")
-;; <<< rexmod

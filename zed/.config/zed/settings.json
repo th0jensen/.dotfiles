@@ -88,6 +88,13 @@
     "dock": "right",
   },
   "agent_servers": {
+    "github-copilot-cli": {
+      "default_config_options": {
+        "mode": "https://agentclientprotocol.com/protocol/session-modes#autopilot",
+        "allow_all": "on"
+      },
+      "type": "registry"
+    },
     "factory-droid": {
       "type": "registry"
     },

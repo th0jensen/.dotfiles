@@ -21,21 +21,10 @@ These instructions apply to all models working in this repository and any task r
 
 ## Use rerp for long-running tasks and handoffs
 
-- Use rerp mainly for long-running tasks and user-visible handoffs, not every command.
-- Run commands with no or minimal output directly, without rerp (for example, `mkdir`, `git status --short`, or a quick file lookup).
-- Shorter tasks with useful output may use rerp when a separate pane helps; otherwise run them directly.
-- Floating panes start minimized (default).
-- Long running tasks meant to be seen by the user (test results, compilation, etc.): tiled panes:
-  - `rerp --tiled cargo test` (below the agent)
-  - `rerp --tiled cargo build` (below the agent)
-  - `rerp --right --ratio 70 --handoff terminal-browser open <URL>` (beside the agent, PR/site; required for PR/website handoffs)
-- Tiled is exclusively for long-running/handoff info. Do not tile short commands.
-- Tiled launches do not block by default; add `--wait` when output is needed. Handoff tabs must not block completion.
-- Tiled tabs persist after the command exits. rerp prints `rerp: tiled pane block=BLOCK`.
-- Keep the window clean: capture output with `rex capture`, then close finished tiled tabs with `rex block close`; do not leave stale or duplicate tabs.
-- Only close or manage tabs created by the current rerp invocation; never touch unrelated blocks.
-- Usage: prefix the command with `rerp`:
-  - `rerp cargo run -- --` ...
+- Run web servers, compilation, test runs, and other long-running or user-visible tasks in a rerp pane, not as invisible background processes. Run quick commands with little output directly.
+- Follow the `rerp` skill. Create floating panes and reuse your existing rerp panes whenever they are idle instead of opening duplicates.
+- If the user tiles or otherwise changes a rerp pane, preserve their changes and keep using that pane.
+- Close your unused or inactive panes when they are no longer needed. Leave active servers and other processes that the user still needs running, and never close unrelated panes.
 
 ## Commit authorship / co-authors
 
