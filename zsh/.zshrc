@@ -14,3 +14,7 @@ esac
 
 # bun completions
 [ -s "/Users/thomas/.bun/_bun" ] && source "/Users/thomas/.bun/_bun"
+
+# >>> termium >>>
+case ":$PATH:" in *:'/home/thomas/.local/bin':*) ;; *) export PATH='/home/thomas/.local/bin':"$PATH" ;; esac
+# <<< termium <<<

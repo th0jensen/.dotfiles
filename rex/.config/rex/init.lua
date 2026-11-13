@@ -39,41 +39,61 @@ rex.bind("cmd+alt+ctrl+b", "float_btop")
 
 -- split config across files (optional):
 -- require("keys")
-
--- >>> rex-agent-resume
--- Starts the rex-agent-resume watcher whenever the server loads this file.
-dofile("/Users/thomas/.local/share/rex-agent-resume/plugin.lua")
--- <<< rex-agent-resume
-
-
-
-
-
-
-
-
-
-
-
-
-
--- >>> amp-rex
--- Cmd+A goes to Ramp (or legacy amp-rex), whose composer selects only its own text.
--- Every other pane keeps Rex's Select All in Pane.
+-- >>> ramp >>>
+-- Added by ramp. Do not remove or edit this block apart from the ramp.exec
+-- list: ramp reads its settings here, and Cmd+A in ramp's prompt needs the
+-- binding below. ramp adds the block again whenever it is missing.
+ramp = {}
+function ramp.exec(commands)
+  ramp.commands = commands
+end
 rex.action{
-  name = "amp_rex_select_all",
-  title = "Select All (amp-rex aware)",
+  name = "ramp_config",
+  title = "ramp: Startup Commands",
+  run = function() return ramp.commands or {} end,
+}
+-- Rex binds Cmd+A to Select All in Pane; send it to ramp's prompt instead.
+-- Other panes keep Rex's behavior.
+rex.action{
+  name = "ramp_select_all",
+  title = "Select All (ramp aware)",
   run = function(ctx, args)
-    local ok, process = pcall(rex.block.call, "com.superlogical.terminal", "process", { block_id = ctx.block_id })
+    local terminal = "com.superlogical.terminal"
+    -- Keys run on your app's home server. A pane on a remote host is reached
+    -- through that host, which needs the pane's session attached.
+    local found, host, target = true, rex, { block_id = ctx.block_id }
+    if ctx.server then
+      found, host = pcall(rex.server, ctx.server)
+      target.session_id = ctx.session_id
+      if found then pcall(host.call, "session.attach", { session_id = ctx.session_id }) end
+    end
+    local ok, process = false, nil
+    if found then ok, process = pcall(host.block.call, terminal, "process", target) end
     local foreground = ok and type(process) == "table" and process.foreground or {}
     local script = foreground.script or ""
-    if foreground.name == "ramp" or foreground.name == "amp-rex" or script:match("amp%-rex[%w.]*$") then
-      -- Kitty CSI u for super+a, which Ramp and legacy amp-rex read as Cmd+A.
-      rex.block.call("com.superlogical.terminal", "write", { block_id = ctx.block_id, data = "\27[97;9u" })
+    if foreground.name == "ramp" or script:match("ramp[%w.]*$") then
+      -- Kitty CSI u for super+a, which ramp reads as Cmd+A.
+      target.data = "\27[97;9u"
+      host.block.call(terminal, "write", target)
     else
       rex.client.queue("pane.select_all", {})
     end
   end,
 }
-rex.bind("cmd+a", "amp_rex_select_all")
--- <<< amp-rex
+rex.bind("cmd+a", "ramp_select_all")
+
+-- Slash commands each ramp pane runs at startup, in order, as if typed.
+-- For example: "/panel timeline left", "/wrap off". Run `rex config reload`
+-- after editing; panes opened afterwards use the new list.
+ramp.exec({
+  "/panel timeline left",
+  "/panel subagents right split",
+  "/panel context right split",
+  "/panel width left 28"
+})
+-- <<< ramp <<<
+
+-- >>> rex-agent-resume
+-- Starts the rex-agent-resume watcher whenever the server loads this file.
+dofile("/home/thomas/.local/share/rex-agent-resume/plugin.lua")
+-- <<< rex-agent-resume
