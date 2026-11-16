@@ -97,3 +97,10 @@ ramp.exec({
 -- Starts the rex-agent-resume watcher whenever the server loads this file.
 dofile(os.getenv("HOME") .. "/.local/share/rex-agent-resume/plugin.lua")
 -- <<< rex-agent-resume
+
+-- >>> leaf >>>
+-- Managed by `leaf rex install`; `leaf rex uninstall` removes it.
+-- plugin: dbd96079ad70c4c6
+dofile("/Users/thomas/.config/rex/plugins/leaf/init.lua").setup({ bin = { "/Users/thomas/.cargo/bin/leaf" } })
+-- open: idle
+-- <<< leaf <<<
