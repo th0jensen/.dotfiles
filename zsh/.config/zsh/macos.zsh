@@ -19,6 +19,7 @@ fi
 unset homebrew_prefix
 
 export EDITOR="zed"
+zstyle ':zle:edit-command-line' editor zed --wait
 
 export CPATH="/opt/homebrew/include:$CPATH"
 export LIBRARY_PATH="$HOME/CEdev/include:/opt/homebrew/lib:$LIBRARY_PATH"
@@ -46,4 +47,9 @@ autoload -Uz compinit && compinit -C
 if (( $+commands[fzf] )); then
   [[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
   [[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
+fi
+
+if [[ -r $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+  source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 fi

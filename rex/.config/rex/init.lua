@@ -93,34 +93,38 @@ ramp.exec({
 })
 -- <<< ramp <<<
 
--- Only a configured zsh line editor publishes zsh-zle. Keep ramp's action
--- (including its normal pane selection fallback) everywhere else.
+-- Only send editing keys to the zsh process that advertised an active ZLE.
+local function write_prompt(ctx, data)
+  if not ctx.block_id then return false end
+  local ok, result = pcall(function()
+    local host = ctx.server and rex.server(ctx.server) or rex
+    local target = { session_id = ctx.session_id, block_id = ctx.block_id }
+    if ctx.server then host.call("session.attach", { session_id = ctx.session_id }) end
+    local api = "com.superlogical.terminal"
+    local status = host.block.call(api, "program_status", target)
+    for _, record in ipairs(status.records) do
+      if record.id == "zsh-zle" and record.state == "idle" then
+        local fg = host.block.call(api, "process", target).foreground
+        if not (fg and fg.name == "zsh" and record.owner and fg.pid == record.owner.pid) then return end
+        target.data = data
+        return host.block.call(api, "write", target)
+      end
+    end
+  end)
+  return ok and result ~= nil
+end
+
 rex.action{
   name = "select_prompt_input",
   title = "Select All (zsh prompt aware)",
   run = function(ctx)
-    if ctx.block_id then
-      local ok, handled = pcall(function()
-        local host = ctx.server and rex.server(ctx.server) or rex
-        local target = { session_id = ctx.session_id, block_id = ctx.block_id }
-        if ctx.server then host.call("session.attach", { session_id = ctx.session_id }) end
-        local api = "com.superlogical.terminal"
-        local status = host.block.call(api, "program_status", target)
-        for _, record in ipairs(status.records) do
-          if record.id == "zsh-zle" and record.state == "idle" then
-            local fg = host.block.call(api, "process", target).foreground
-            if not (fg and fg.name == "zsh" and record.owner and fg.pid == record.owner.pid) then return end
-            target.data = "\27[97;9u"
-            return host.block.call(api, "write", target)
-          end
-        end
-      end)
-      if ok and handled then return end
-    end
+    if write_prompt(ctx, "\27[97;9u") then return end
     return rex.invoke("ramp_select_all")
   end,
 }
 rex.bind("cmd+a", "select_prompt_input")
+rex.bind("cmd+z", function(ctx) return write_prompt(ctx, "\31") end) -- Ctrl+_, ZLE undo
+rex.bind("cmd+backspace", function(ctx) return write_prompt(ctx, "\27[127;9u") end)
 
 -- >>> rex-agent-resume
 -- Starts the rex-agent-resume watcher whenever the server loads this file.

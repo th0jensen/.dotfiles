@@ -26,11 +26,15 @@ bindkey "^[[A" history-search-backward
 bindkey "^[[B" history-search-forward
 bindkey "^[[C" forward-char
 bindkey "^[[D" backward-char
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey -M emacs '^X^E' edit-command-line
 
 if [[ -n $REX_BLOCK ]]; then
   _rex_select_input() { MARK=0; CURSOR=${#BUFFER}; REGION_ACTIVE=1; }
   zle -N _rex_select_input
   bindkey -M emacs $'\e[97;9u' _rex_select_input
+  bindkey -M emacs $'\e[127;9u' backward-kill-line
 
   _rex_edit_selection() {
     if [[ $LASTWIDGET == _rex_select_input ]] && (( REGION_ACTIVE )); then
