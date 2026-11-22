@@ -28,13 +28,6 @@ bindkey "^[[C" forward-char
 bindkey "^[[D" backward-char
 
 if [[ -n $REX_BLOCK ]]; then
-  # Advertise the editing interval, not just that zsh is in the foreground.
-  autoload -Uz add-zle-hook-widget
-  _rex_prompt_start() { printf '\e]7501;id=zsh-zle:state=idle\a' > /dev/tty; }
-  _rex_prompt_finish() { printf '\e]7501;id=zsh-zle:state=clear\a' > /dev/tty; }
-  add-zle-hook-widget line-init _rex_prompt_start
-  add-zle-hook-widget line-finish _rex_prompt_finish
-
   _rex_select_input() { MARK=0; CURSOR=${#BUFFER}; REGION_ACTIVE=1; }
   zle -N _rex_select_input
   bindkey -M emacs $'\e[97;9u' _rex_select_input

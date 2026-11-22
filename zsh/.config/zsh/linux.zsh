@@ -11,17 +11,7 @@ path=(
 )
 typeset -U path PATH
 
-export ZSH="/usr/share/oh-my-zsh"
-DISABLE_MAGIC_FUNCTIONS="true"
-ENABLE_CORRECTION="true"
-COMPLETION_WAITING_DOTS="true"
-[[ -z "${plugins[*]}" ]] && plugins=(git fzf extract)
-[[ -r "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
-
-# oh-my-zsh's lib/theme-and-appearance.zsh unconditionally overrides `ls` on
-# non-macOS with `ls --color=tty`, clobbering the eza alias from common.zsh.
-# Reassert it here so it wins; ll/la/lsa re-resolve through this at runtime.
-alias ls='eza -lh --group-directories-first --icons=auto --git'
+autoload -Uz compinit && compinit -C
 
 export HISTCONTROL=ignoreboth
 export HISTORY_IGNORE="(\&|[bf]g|c|clear|history|exit|q|pwd|* --help)"
