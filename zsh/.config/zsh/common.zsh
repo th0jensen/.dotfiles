@@ -27,6 +27,30 @@ bindkey "^[[B" history-search-forward
 bindkey "^[[C" forward-char
 bindkey "^[[D" backward-char
 
+if [[ -n $REX_BLOCK ]]; then
+  # Advertise the editing interval, not just that zsh is in the foreground.
+  autoload -Uz add-zle-hook-widget
+  _rex_prompt_start() { printf '\e]7501;id=zsh-zle:state=idle\a' > /dev/tty; }
+  _rex_prompt_finish() { printf '\e]7501;id=zsh-zle:state=clear\a' > /dev/tty; }
+  add-zle-hook-widget line-init _rex_prompt_start
+  add-zle-hook-widget line-finish _rex_prompt_finish
+
+  _rex_select_input() { MARK=0; CURSOR=${#BUFFER}; REGION_ACTIVE=1; }
+  zle -N _rex_select_input
+  bindkey -M emacs $'\e[97;9u' _rex_select_input
+
+  _rex_edit_selection() {
+    if [[ $LASTWIDGET == _rex_select_input ]] && (( REGION_ACTIVE )); then
+      BUFFER=''
+      REGION_ACTIVE=0
+      [[ $WIDGET == backward-delete-char ]] && return 0
+    fi
+    zle ".$WIDGET"
+  }
+  zle -N self-insert _rex_edit_selection
+  zle -N backward-delete-char _rex_edit_selection
+fi
+
 setopt combining_chars menu_complete auto_menu chase_links complete_in_word always_to_end extended_glob interactive_comments auto_cd
 unsetopt beep
 
